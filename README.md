@@ -1,12 +1,57 @@
-# React + Vite
+# DailyFocus 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**DailyFocus** is a premium productivity application designed to help you orchestrate your day from **Start** to **Finish**. Built with React, Vite, and Tailwind CSS, it features a stunning "Midnight Aurora" inspired UI (Sky Blue & Emerald Green) and robust task management workflows.
 
-Currently, two official plugins are available:
+![DailyFocus UI](/screenshots/app-preview.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## Expanding the ESLint configuration
+- **SOD/EOD Workflow**: clearly distinguish between your *Plan* (Start of Day) and *Achievements* (End of Day).
+- **Premium UI**: Glassmorphism effects, smooth animations, and a focused Sky/Emerald color palette.
+- **History Archive**: Automatically saves your daily summaries. Review your past efficiency scores and notes.
+- **Persistence**: Data survives page reloads using local storage.
+- **Zero Distractions**: No cluttered menus. Just you and your goals.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Tech Stack
+
+- **Framework**: [React](https://react.dev/) + [Vite](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Icons**: Lucide React / SVG
+- **State**: React Hooks + LocalStorage
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v16+)
+- pnpm (recommended) or npm
+
+### Installation
+
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/kmrnitish98/DailyFocus.git
+    cd DailyFocus
+    cd app
+    ```
+
+2.  **Install Dependencies**
+    ```bash
+    pnpm install
+    ```
+
+3.  **Run Development Server**
+    ```bash
+    pnpm dev
+    ```
+
+4.  **Open in Browser**
+    Visit `http://localhost:5173` (or the port shown in your terminal).
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License.
