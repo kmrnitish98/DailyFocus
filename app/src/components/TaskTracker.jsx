@@ -23,7 +23,14 @@ export default function TaskTracker() {
 
     const [sodInput, setSodInput] = useState("");
 
-    // --- Persistence Effects ---
+    const [currentTime, setCurrentTime] = useState(new Date());
+
+    // --- Persistence Effects & Time Timer ---
+    useEffect(() => {
+        const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+        return () => clearInterval(timer);
+    }, []);
+
     useEffect(() => {
         localStorage.setItem("sodItems", JSON.stringify(sodItems));
     }, [sodItems]);
@@ -52,6 +59,12 @@ export default function TaskTracker() {
 
         setSodItems([...sodItems, newItem]);
         setSodInput("");
+    };
+
+    const handleDeleteSod = (id) => {
+        if (confirm("Delete this target?")) {
+            setSodItems(sodItems.filter((item) => item.id !== id));
+        }
     };
 
     const handleCompleteSod = (id) => {
@@ -117,20 +130,27 @@ export default function TaskTracker() {
         <div className="min-h-screen animate-gradient-bg text-white font-sans selection:bg-teal-500/30 overflow-hidden flex flex-col">
             {/* Navbar / Tabs */}
             <nav className="border-b border-white/10 bg-slate-950/50 backdrop-blur-md sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between relative">
+                    <div className="flex items-center gap-4">
                         <div className="bg-gradient-to-br from-sky-500 to-emerald-500 p-2 rounded-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
                         </div>
-                        <span className="font-bold text-xl tracking-tight hidden md:inline">Daily<span className="text-sky-400">Focus</span></span>
+                        <span className="font-bold text-xl tracking-tight leading-none">Daily<span className="text-sky-400">Focus</span></span>
+                    </div>
+
+                    {/* Centered Date/Time */}
+                    <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden md:block">
+                        <span className="text-[20px] font-medium text-slate-300 font-mono tracking-wide">
+                            {currentTime.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })} • {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
                     </div>
 
                     <div className="flex bg-white/5 p-1 rounded-xl">
                         <button
                             onClick={() => setActiveTab("today")}
                             className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${activeTab === "today"
-                                    ? "bg-white/10 text-white shadow-lg"
-                                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                                ? "bg-white/10 text-white shadow-lg"
+                                : "text-slate-400 hover:text-white hover:bg-white/5"
                                 }`}
                         >
                             Today
@@ -138,8 +158,8 @@ export default function TaskTracker() {
                         <button
                             onClick={() => setActiveTab("history")}
                             className={`px-6 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${activeTab === "history"
-                                    ? "bg-white/10 text-white shadow-lg"
-                                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                                ? "bg-white/10 text-white shadow-lg"
+                                : "text-slate-400 hover:text-white hover:bg-white/5"
                                 }`}
                         >
                             History
@@ -167,8 +187,8 @@ export default function TaskTracker() {
 
                                 {/* SOD Column */}
                                 <div className="space-y-4">
-                                    <div className="glass-card p-6 border-l-4 border-l-sky-500">
-                                        <h2 className="text-xl font-bold text-sky-200 mb-4 flex items-center gap-2">
+                                    <div className="glass-card p-6 border-l-4 border-l-emerald-500 bg-emerald-900/10">
+                                        <h2 className="text-xl font-bold text-emerald-200 mb-4 flex items-center gap-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
                                             Start of Day
                                         </h2>
@@ -179,12 +199,12 @@ export default function TaskTracker() {
                                                 placeholder="Add a new target..."
                                                 value={sodInput}
                                                 onChange={(e) => setSodInput(e.target.value)}
-                                                className="glass-input w-full pr-12"
+                                                className="glass-input w-full pr-12 bg-white/5 focus:ring-emerald-500/50"
                                             />
                                             <button
                                                 type="submit"
                                                 disabled={!sodInput.trim()}
-                                                className="absolute right-2 top-2 p-1.5 bg-sky-500/20 text-sky-400 hover:bg-sky-500 hover:text-white rounded-lg transition-colors disabled:opacity-0"
+                                                className="absolute right-2 top-2 p-1.5 bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white rounded-lg transition-colors disabled:opacity-0"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
                                             </button>
@@ -192,19 +212,28 @@ export default function TaskTracker() {
 
                                         <div className="space-y-3">
                                             {sodItems.length === 0 && (
-                                                <div className="text-center py-8 text-slate-500 text-sm">
-                                                    <p>No active targets.</p>
+                                                <div className="text-center py-8 text-slate-500 text-sm border-2 border-dashed border-slate-700/50 rounded-xl">
+                                                    <p>top priority tasks here.</p>
                                                 </div>
                                             )}
                                             {sodItems.map((item) => (
-                                                <div key={item.id} className="group flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5 hover:border-sky-500/30 transition-all hover:bg-white/10">
-                                                    <span className="text-slate-200">{item.text}</span>
-                                                    <button
-                                                        onClick={() => handleCompleteSod(item.id)}
-                                                        className="text-xs font-semibold bg-sky-500/10 text-sky-400 px-3 py-1.5 rounded-lg border border-sky-500/20 hover:bg-sky-500 hover:text-white transition-all opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0"
-                                                    >
-                                                        Done
-                                                    </button>
+                                                <div key={item.id} className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10 hover:border-emerald-500/30 transition-all hover:bg-white/10 gap-3">
+                                                    <span className="text-slate-200 font-medium">{item.text}</span>
+                                                    <div className="flex gap-2 shrink-0">
+                                                        <button
+                                                            onClick={() => handleCompleteSod(item.id)}
+                                                            className="text-xs font-semibold bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-lg border border-emerald-500/20 hover:bg-emerald-500 hover:text-white transition-all flex items-center gap-1"
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                                                            Done
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDeleteSod(item.id)}
+                                                            className="text-xs font-semibold bg-rose-500/10 text-rose-400 px-3 py-1.5 rounded-lg border border-rose-500/20 hover:bg-rose-500 hover:text-white transition-all"
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>
